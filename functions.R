@@ -406,7 +406,7 @@ GeneMarkersTable <- function(object, out.name, ident.1, ident.2, test.use = "wil
     df <- data.frame(geneID = rownames(cluster_markers),
                      pct.1 = cluster_markers$pct.1, pct.2 = cluster_markers$pct.2,
                      avg_exp.1 = exp1[rownames(cluster_markers)], avg_exp.2 = exp2[rownames(cluster_markers)],
-                     avg_log2FC = cluster_markers$avg_logFC/log(2),
+                     avg_log2FC = cluster_markers$avg_log2FC,
                      p_val = cluster_markers$p_val,
                      p_val_adj = cluster_markers$p_val_adj)
         
@@ -431,7 +431,7 @@ GeneMarkersTableNEW <- function(object, out.name, ident.1, ident.2, test.use = "
     df <- data.frame(geneID = rownames(cluster_markers),
                      pct.1 = cluster_markers$pct.1, pct.2 = cluster_markers$pct.2,
                      avg_exp.1 = exp1[rownames(cluster_markers)], avg_exp.2 = exp2[rownames(cluster_markers)],
-                     avg_log2FC = cluster_markers$avg_logFC/log(2),
+                     avg_log2FC = cluster_markers$avg_log2FC,
                      p_val = cluster_markers$p_val,
                      p_val_adj = cluster_markers$p_val_adj)
     
