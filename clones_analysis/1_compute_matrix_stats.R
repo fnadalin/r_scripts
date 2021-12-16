@@ -9,6 +9,7 @@
 
 MIN_READ_COUNT <- 5
 PLOT_TITLE <- ""
+MIN_UMI_COUNT <- 0
 
 
 ################################# OPTION MENU ##################################
@@ -25,6 +26,8 @@ option_list <- list(
         help="[REQUIRED] directory containing matrix.mtx, features.tsv, barcodes.tsv, where features are both genes and GBC (may be gzipped)"),
     make_option("--out_dir", type = "character",
         help="[REQUIRED] output folder containing tables and plots"),
+    make_option("--min_UMI_count", type = "integer", default = MIN_UMI_COUNT,
+        help="[REQUIRED] minimum UMI count to consider a CB as detected [default=%default]"),
     make_option("--min_read_count", type = "integer", default = MIN_READ_COUNT,
         help="[OPTIONAL] minimum number of reads to consider a GBC as detected [default=%default]"),
     make_option("--plot_title", type = "character",
@@ -51,6 +54,9 @@ if (is.null(opt$out_dir)) {
 } else {
     OUT_DIR <- opt$out_dir
 }
+
+if (!is.null(opt$min_UMI_count))
+    MIN_UMI_COUNT <- opt$min_UMI_count
 
 if (!is.null(opt$min_read_count))
     MIN_READ_COUNT <- opt$min_read_count
@@ -107,9 +113,13 @@ cat("parse input files\n")
 M_genes <- Matrix()
 M_gbc <- Matrix()
 ParseFeatureBarcodeMatrixCombined(MATRIX_DIR, M_genes, M_gbc)
+cb_umicount <- colSums(M_genes)
+M_genes <- M_genes[,cb_umicount > MIN_UMI_COUNT]
+M_gbc <- M_gbc[,cb_umicount > MIN_UMI_COUNT]
+cb_umicount <- cb_umicount[cb_umicount > MIN_UMI_COUNT]
+
 cb_exp <- colnames(M_genes)
 genes <- rownames(M_genes)
-cb_umicount <- colSums(M_genes)
 # cb_genecount <- colSums(M_genes > 0) # NEW: count the number of detected genes
 cb_gbc <- colnames(M_gbc)
 gbc <- rownames(M_gbc)

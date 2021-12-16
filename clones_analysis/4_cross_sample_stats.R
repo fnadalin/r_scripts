@@ -261,6 +261,10 @@ for (i in 1:n_samples) {
     idx_intersection <- which(df$expr.GBC.list %in% surv_clones_intersection)
     c_surv_intersection[idx_intersection] <- rep("surv", rep = length(idx_intersection))
     df <- cbind(df, surv.union = c_surv_union, surv.intersection = c_surv_intersection)
+    # NEW: do not classify as non-surv the cells where no GBC was found!!! (2020/02/10)
+    idx_uninf <- which(df$class == "uninfected")
+    df$surv.union[idx_uninf] <- rep(NA, length(idx_uninf))
+    df$surv.intersection[idx_uninf] <- rep(NA, length(idx_uninf))
     write.table(df, file = file.path(sample_dir[i], OUT_CELL_INFO), sep = "\t", quote = FALSE)   
 }
 
