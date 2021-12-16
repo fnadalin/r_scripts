@@ -12,6 +12,9 @@
 #  - table with CB, expressed GBC list, quality pass (based on UMI count), type (unclassified, uninf, single inf, coinf, doublet)
 #  - plot with the read count / UMI count across CB, coloured by class
 
+FEATURE_ASSAY <- "CRISPR Guide Capture"
+FEATURE_NAME <- "GBC"
+
 MIN_UMI_COUNT <- 0
 MAX_UMI_COUNT <- 100000
 MIN_READ_COUNT_EXPR <- 20
@@ -54,7 +57,10 @@ option_list <- list(
     make_option("--doublet_prob_cutoff", type = "double", default = DOUBLET_PROB_CUTOFF,
         help="[OPTIONAL] maximum probability for the doublet test to label a CB as doublet [default=%default]"),
     make_option("--plot_title", type = "character",
-        help="[OPTIONAL] title to be written on the plots")
+        help="[OPTIONAL] title to be written on the plots"),
+    make_option("--feature_assay", type = "character",
+        help="[OPTIONAL] name of the feature assay (\"CRISPR Guide Capture\", \"MULTISEQ Capture\"...)")
+
 )
 
 
@@ -109,6 +115,11 @@ if (!is.null(opt$doublet_prob_cutoff))
 if (!is.null(opt$plot_title))
     PLOT_TITLE <- opt$plot_title
 
+if (!is.null(opt$feature_assay))
+    FEATURE_ASSAY <- opt$feature_assay
+
+if (FEATURE_ASSAY == "MULTISEQ Capture")
+    FEATURE_NAME <- "MBC"
 
 ################################### IMPORT #####################################
 
@@ -135,10 +146,10 @@ library("scales")
 if (!dir.exists(OUT_DIR))
     dir.create(OUT_DIR, recursive = TRUE)
 
-IN_CB_GBC_INFO_TABLE <- file.path(IN_DIR, "stat_GBC_read_count.tsv")
+IN_CB_GBC_INFO_TABLE <- file.path(IN_DIR, paste0("stat_",FEATURE_NAME,"_read_count.tsv"))
 IN_CB_INFO_TABLE     <- file.path(IN_DIR, "stat_CB_UMI_read_count.tsv")
 
-OUT_TABLE_GBC_STATS  <- file.path(OUT_DIR, "stat_GBC_read_count_with_info.tsv")
+OUT_TABLE_GBC_STATS  <- file.path(OUT_DIR, paste0("stat_",FEATURE_NAME,"_read_count_with_info.tsv"))
 OUT_TABLE_STATS      <- file.path(OUT_DIR, "CB_classification.tsv")
 OUT_FIGURE_DOUBLET_SCORE <- file.path(OUT_DIR, "CB_multi_guide_doublet_score_density.pdf")
 OUT_FIGURE_CB_GBC    <- file.path(OUT_DIR, "CB_classification.pdf")
