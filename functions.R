@@ -94,6 +94,42 @@ ParseFeatureBarcodeMatrixCombined <- function(matrix.dir, M_genes, M_gbc) {
 }
 
 
+ParseFeatureBarcodeMatrixExtract <- function(matrix.dir, M, assay) {
+
+    mtx <- file.path(matrix.dir, "matrix.mtx")
+    mtx_gz <- paste0(mtx, ".gz")
+
+    if (!xor( file.exists(mtx), file.exists(mtx_gz) )) {
+        write(paste("Either", mtx, "or", mtx_gz, "must exist"), stderr())
+        q()
+    }
+
+    compress <- !file.exists(mtx)
+    features <- file.path(matrix.dir, "features.tsv")
+    barcodes <- file.path(matrix.dir, "barcodes.tsv")
+
+    if (!compress) {
+        MM <- readMM(mtx)
+        FF <- as.matrix(read.table(features, sep="\t"))
+        rownames(MM) <- FF[,2]
+        feature_type <- FF[,3]
+        colnames(MM) <- drop(as.matrix(read.table(barcodes)))
+    } else {
+        MM <- readMM(gzfile(paste0(mtx,".gz")))
+        gz <- gzfile(paste0(features, ".gz"))
+        FF <- as.matrix(read.table(gz, sep="\t"))
+        rownames(MM) <- FF[,2]
+        feature_type <- FF[,3]
+        gz <- gzfile(paste0(barcodes, ".gz"))
+        colnames(MM) <- drop(as.matrix(read.table(gz)))
+    }
+
+    MM_genes <- MM[feature_type == assay,]
+
+    eval.parent(substitute(M <- MM_feat))
+}
+
+
 PCA <- function(object, out.dir, pcs.compute = 20, only_genes = NULL, suffix = "allgenes", reduction.name = "", do.jack = FALSE, ident.slot = "orig.ident", col = NULL) {
 
     if (!file.exists(out.dir))
