@@ -196,9 +196,9 @@ g
 dev.off()
 
 pdf(OUT_FIGURE_CB_GBC, width = 5.5, height = 6)
-SUBTITLE <- bquote(paste0("[ ",FEATURE_NAME," read count") >= ~ .(MIN_READ_COUNT) ~ "]")
+SUBTITLE <- bquote("[ BC read count" >= ~ .(MIN_READ_COUNT) ~ "]")
 plot(x = readcount, y = readcount / cb_readcount[cb_idx], log = "x",
-     xlab = "GBC read count", ylab = paste0("(",FEATURE_NAME," read count) / (CB read count)"), main = PLOT_TITLE, sub = SUBTITLE,
+     xlab = "GBC read count", ylab = "(BC read count) / (CB read count)", main = PLOT_TITLE, sub = SUBTITLE,
      col = "black", pch = 16, cex = 0.5)
 points(x = readcount[rank1_idx], y = readcount[rank1_idx] / cb_readcount[cb_rank1_idx],
        col = "magenta", pch = 16, cex = 0.5)
@@ -206,9 +206,9 @@ legend("bottomright", legend = c("rank = 1", "rank >= 1"), col = c("magenta", "b
 dev.off()
 
 pdf(OUT_FIGURE_CB_GBC_UMI, width = 5.5, height = 6)
-SUBTITLE <- bquote(paste0("[ ",FEATURE_NAME," read count") >= ~ .(MIN_READ_COUNT) ~ "]")
+SUBTITLE <- bquote("[ BC read count" >= ~ .(MIN_READ_COUNT) ~ "]")
 plot(x = readcount, y = cb_umicount[cb_idx], log = "xy",
-     xlab = paste0(FEATURE_NAME," read count"), ylab = "CB UMI count", main = PLOT_TITLE, sub = SUBTITLE,
+     xlab = "BC read count", ylab = "CB UMI count", main = PLOT_TITLE, sub = SUBTITLE,
      col = "black", pch = 16, cex = 0.5)
 points(x = readcount[rank1_idx], y = cb_umicount[cb_rank1_idx],
        col = "magenta", pch = 16, cex = 0.5)
@@ -245,13 +245,13 @@ df_cb_gbc_info <- cbind(df_cb_gbc_info, data.frame(readfrac = gbc_readfrac, rank
 write.table(df_cb_gbc_info, file = OUT_TABLE_GBC_STATS, quote = FALSE, sep = "\t")
 
 pdf(OUT_FIGURE_GBC_READ_COUNT_PVAL, width = 3.5, height = 3.5)
-SUBTITLE <- bquote(paste0("[ ",FEATURE_NAME," read count") >= ~ .(MIN_READ_COUNT) ~ "]")
+SUBTITLE <- bquote("[ BC read count" >= ~ .(MIN_READ_COUNT) ~ "]")
 plot(x = df_cb_gbc_info$p.val, y = df_cb_gbc_info$rank1.readfrac, log = "x",
-     xlab = "p-value", ylab = paste0("(",FEATURE_NAME," read count) / (rank1 ",FEATURE_NAME," read count)", main = PLOT_TITLE, sub = SUBTITLE,
+     xlab = "p-value", ylab = "(BC read count) / (rank1 BC read count)", main = PLOT_TITLE, sub = SUBTITLE,
      col = "black", pch = 16, cex = 0.5)
 dev.off()
 
-g <- ggplot(data = df_cb_gbc_info, aes(x = readcount)) + theme_classic() + geom_density() + xlab(paste0(FEATURE_NAME," read count")) + ylab("density") + ggtitle(PLOT_TITLE)
+g <- ggplot(data = df_cb_gbc_info, aes(x = readcount)) + theme_classic() + geom_density() + xlab("BC read count") + ylab("density") + ggtitle(PLOT_TITLE)
 pdf(OUT_FIGURE_GBC_READ_COUNT_DENSITY, width = 3.5, height = 3.5)
 g
 dev.off()
@@ -266,10 +266,10 @@ dev.off()
 pdf(OUT_FIGURE_GBC_PVAL_HIST, width = 3.5, height = 3.5)
 m <- max(-log10(df_cb_gbc_info$p.val))
 h <- hist(-log10(df_cb_gbc_info$p.val), breaks = 51, plot = FALSE)
-barplot(height = h$counts, names.arg = h$breaks[2:length(h$breaks)], las = 2, main = PLOT_TITLE, xlab = "-log10(p-value)", ylab = paste0("number of ",FEATURE_NAME))
+barplot(height = h$counts, names.arg = h$breaks[2:length(h$breaks)], las = 2, main = PLOT_TITLE, xlab = "-log10(p-value)", ylab = "number of BC")
 dev.off()
 
-g <- ggplot(data = df_cb_gbc_info, aes(x = rank1.readfrac)) + theme_classic() + geom_density() + xlab(paste0("(",FEATURE_NAME," read count) / (rank1 ",FEATURE_NAME," read count)")) + ylab("density") + ggtitle(PLOT_TITLE)
+g <- ggplot(data = df_cb_gbc_info, aes(x = rank1.readfrac)) + theme_classic() + geom_density() + xlab("(BC read count) / (rank1 BC read count)") + ylab("density") + ggtitle(PLOT_TITLE)
 pdf(OUT_FIGURE_GBC_READFRAC_DENSITY, width = 3.5, height = 3.5)
 g
 dev.off()
@@ -297,18 +297,18 @@ for (i in 1:num_detected_gbc) {
 cum_gbc_readcount <- cum_gbc_readcount[2:length(cum_gbc_readcount)]
 
 pdf(OUT_FIGURE_GBC, width = 4, height = 4.5)
-SUBTITLE <- bquote(paste0("[ ",FEATURE_NAME," read count") >= ~ .(MIN_READ_COUNT) ~ "]")
+SUBTITLE <- bquote("[ BC read count" >= ~ .(MIN_READ_COUNT) ~ "]")
 plot(x = 1:length(cum_gbc_readcount), y = cum_gbc_readcount / num_reads, 
      lty = 1, col = "blue", 
-     main = PLOT_TITLE, sub = SUBTITLE, xlab = paste0("Number of ",FEATURE_NAME), ylab = "Fraction of reads")
+     main = PLOT_TITLE, sub = SUBTITLE, xlab = "Number of BC", ylab = "Fraction of reads")
 dev.off() 
 
-g <- ggplot(data = df_cb_info, aes(x = readcount)) + theme_classic() + geom_density() + xlab(paste0("CB ",FEATURE_NAME," read count")) + ylab("density") + ggtitle(PLOT_TITLE)
+g <- ggplot(data = df_cb_info, aes(x = readcount)) + theme_classic() + geom_density() + xlab("CB BC read count") + ylab("density") + ggtitle(PLOT_TITLE)
 pdf(OUT_FIGURE_CB_GBC_READ_COUNT_DENSITY, width = 3.5, height = 3.5)
 g
 dev.off()
 
-g <- ggplot(data = df_cb_info, aes(x = rank1.GBC.readcount)) + theme_classic() + geom_density() + xlab(paste0("rank1 ",FEATURE_NAME," read count")) + ylab("density") + ggtitle(PLOT_TITLE)
+g <- ggplot(data = df_cb_info, aes(x = rank1.GBC.readcount)) + theme_classic() + geom_density() + xlab("rank1 BC read count") + ylab("density") + ggtitle(PLOT_TITLE)
 pdf(OUT_FIGURE_CB_RANK1_GBC_READ_COUNT_DENSITY, width = 3.5, height = 3.5)
 g
 dev.off()
