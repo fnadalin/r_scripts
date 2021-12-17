@@ -124,7 +124,7 @@ ParseFeatureBarcodeMatrixExtract <- function(matrix.dir, M, assay) {
         colnames(MM) <- drop(as.matrix(read.table(gz)))
     }
 
-    MM_genes <- MM[feature_type == assay,]
+    MM_feat <- MM[feature_type == assay,]
 
     eval.parent(substitute(M <- MM_feat))
 }
