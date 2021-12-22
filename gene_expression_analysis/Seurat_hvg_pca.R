@@ -83,7 +83,7 @@ for (feature_method in c("mean.var.plot", "vst")) {
 saveRDS(object, file = file.path(OUT_DIR, "object.Rds"))
 
 
-
+sessionInfo()
 
 q()
 

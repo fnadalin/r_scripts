@@ -69,6 +69,6 @@ for (res in RES) {
 }
 
 
-
+sessionInfo()
 q()
 

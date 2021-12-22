@@ -106,5 +106,6 @@ for (dr in drs) {
 }
 
 
+sessionInfo()
 q()
 

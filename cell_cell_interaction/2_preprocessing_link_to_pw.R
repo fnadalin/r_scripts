@@ -35,5 +35,6 @@ for (i in 1:length(idx)) {
 
 write.table(M, file = OUTFILE, sep = "-", quote = FALSE, col.names = FALSE, row.names = FALSE)
 
+sessionInfo()
 q()
 

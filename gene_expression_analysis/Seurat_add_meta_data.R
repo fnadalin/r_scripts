@@ -5,6 +5,7 @@
 # Take a tsv file as input, the column(s) to be added, and an optional prefix for the cell name, and add the info to the object
 
 PREFIX <- ""
+COLUMNS <- NULL
 
 
 ################################# OPTION MENU ##################################
@@ -22,7 +23,7 @@ option_list <- list(
     make_option("--table", type = "character",
         help="[REQUIRED] input table in tsv format, with rownames (cells) and colnames (info to be added)"),
     make_option("--columns", type = "character",
-        help="[REQUIRED] comma-separated list of field names to be added to the object"),
+        help="[OPTIONAL] comma-separated list of field names to be added to the object"),
     make_option("--prefix", type = "character",
         help="[OPTIONAL] prefix to be added to the cell IDs (dash-separated)")
 )
@@ -48,10 +49,7 @@ if (is.null(opt$table)) {
     TABLE <- opt$table
 }
 
-if (is.null(opt$columns)) {
-    write("Option --columns is required\nTry --help for help", stderr()) 
-    q()
-} else {
+if (!is.null(opt$columns)) {
     COLUMNS <- unlist(strsplit(opt$columns, split = ","))
 }
 
@@ -68,17 +66,23 @@ object <- readRDS(OBJECT)
 info <- read.table(TABLE, sep = "\t", header = TRUE)
 if (PREFIX != "") 
     rownames(info) <- paste(PREFIX, rownames(info), sep = "-")
-if (length(COLUMNS) > 1) { 
-    df <- info[,COLUMNS]
+
+if (is.null(COLUMNS)) {
+    df <- info
 } else {
-    df <- data.frame(info[,COLUMNS])
-    colnames(df) <- COLUMNS
-    rownames(df) <- rownames(info)
+    if (length(COLUMNS) > 1) { 
+        df <- info[,COLUMNS]
+    } else {
+        df <- data.frame(info[,COLUMNS])
+        colnames(df) <- COLUMNS
+        rownames(df) <- rownames(info)
+    }
 }
-object <- AddMetaData(object, meta = df, col.name = COLUMNS)
+object <- AddMetaData(object, meta = df)
 saveRDS(object, file = OBJECT)
 
 
+sessionInfo()
 
 q()
 

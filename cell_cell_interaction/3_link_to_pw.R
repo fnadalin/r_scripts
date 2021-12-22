@@ -93,6 +93,7 @@ df <- data.frame(pw, pw_names, pw_size)
 write.table(df, file = OUT_PW_NAMES, quote = FALSE, row.names = FALSE, sep = "\t")
 
 
+sessionInfo()
 q()
 
 

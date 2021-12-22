@@ -112,7 +112,7 @@ print(g)
 dev.off()
 
 
-
+sessionInfo()
 q()
 
 

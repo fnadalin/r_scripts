@@ -87,8 +87,9 @@ for (i in 1:nrow(matrix_dir_list)) {
         CELL_LIST <- matrix_dir_list[i,3]
 
     mtx <- file.path(MATRIX_DIR, "matrix.mtx")
+    mtx_gz <- paste0(mtx,".gz")
 
-    if (!xor( file.exists(mtx), file.exists(paste0(mtx,".gz")) )) {
+    if (!xor( file.exists(mtx), file.exists(mtx_gz) )) {
         write(paste("Either", mtx, "or", mtx_gz, "must exist"), stderr())
         q()
     } 
@@ -146,6 +147,7 @@ object <- ScaleData(object, vars.to.regress = VARS_TO_REGRESS)
 saveRDS(object, file = OUT_FILE)
 
 
+sessionInfo()
 q()
 
 

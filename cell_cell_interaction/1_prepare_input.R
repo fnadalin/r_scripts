@@ -43,6 +43,7 @@ write.table(df.counts, file = file.path(OUT_DIR, "counts.txt"), sep = "\t", quot
 write.table(df.meta, file = file.path(OUT_DIR, "meta.txt"), sep = "\t", quote = FALSE, row.names = FALSE)
 
 
+sessionInfo()
 q()
 
 

@@ -101,5 +101,5 @@ out_prefix <- file.path(out_dir, "GSEAoutput")
 RunGSEACustom(table = queryFile, out_prefix = out_prefix, collection = collection, order = "d", title = "", adj_pval = 1, nPerm = 1000)
 
 
-
+sessionInfo()
 q()

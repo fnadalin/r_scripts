@@ -107,6 +107,6 @@ for (feature_method in c("mean.var.plot", "vst")) {
 saveRDS(object, file=OBJECT)
 
 
-
+sessionInfo()
 q()
 

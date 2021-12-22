@@ -154,7 +154,7 @@ dev.off()
 
 
 
-
+sessionInfo()
 
 
 q()

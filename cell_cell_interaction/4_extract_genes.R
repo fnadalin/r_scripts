@@ -33,5 +33,7 @@ df <- data.frame(complex_name = complex_name[match(deco$id_cp_interaction[idx2],
 write.table(df, file = file.path(OUT_DIR, "complex_and_genes.tsv"), sep = "\t", quote = FALSE, row.names = FALSE)
 write.table(unique(as.character(deco$gene_name[idx2])), file = file.path(OUT_DIR, "genes_unique.txt"), quote = FALSE, col.names = FALSE, row.names = FALSE)
 
+
+sessionInfo()
 q()
 

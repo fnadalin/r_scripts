@@ -21,6 +21,7 @@ gene_list <- drop(as.matrix(read.table(GENE_LIST)))
 converted <- bitr(gene_list, fromType = FROM, toType = TO, OrgDb = ORGLIB, drop=FALSE)
 write.table(converted, file = OUT, quote = FALSE, sep = "\t", row.names = FALSE)
 
+sessionInfo()
 q()
 
 

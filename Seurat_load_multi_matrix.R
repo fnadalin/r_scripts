@@ -116,6 +116,7 @@ object <- AddMetaData(object = object, metadata = meta)
 saveRDS(object, file = OUT_FILE)
 
 
+sessionInfo()
 q()
 
 
