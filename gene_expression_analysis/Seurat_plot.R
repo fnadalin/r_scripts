@@ -15,7 +15,7 @@ GetNPCs <- function(in_dir) {
 
 DrPlot <- function(object, dr = "pca", dr_plot = "pca", pcs = 50, pval = 1e-05, non.rand.sd.frac = 0.5, k, res, out_dir, dr_type = "PCA") {
 
-	pdf(file.path(out_dir, paste0(dr_type, "_plot_samples.pdf")), width = 4, height = 3)
+	pdf(file.path(out_dir, paste0(dr_type, "_plot_samples.pdf")), width = 3.7*2, height = 3*2)
 	print(DimPlot(object, group.by = "sample.name", reduction = dr_plot))
 	dev.off()
 
