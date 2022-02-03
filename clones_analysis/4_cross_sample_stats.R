@@ -76,9 +76,12 @@ OUT_TABLE_CLONE_SAMPLE_SINGLE <- file.path(OUT_DIR, "clone_sample_CB_count_singl
 OUT_TABLE_CLONE_SAMPLE_SINGLE_AND_DOUBLET <- file.path(OUT_DIR, "clone_sample_CB_count_single_and_doublet.tsv")
 OUT_TABLE_CLONE_SAMPLE_COINFECTED <- file.path(OUT_DIR, "clone_sample_CB_count_coinfected.tsv")
 OUT_TABLE_CELL_CLASS       <- file.path(OUT_DIR, "barplot_CB_classification.tsv")
+OUT_TABLE_CELL_CLASS_QUAL  <- file.path(OUT_DIR, "barplot_CB_classification_highQual.tsv")
 OUT_TABLE_CLONE_NUM        <- file.path(OUT_DIR, "barplot_GBC_count.tsv")
 OUT_FIGURE_CELL_CLASS      <- file.path(OUT_DIR, "barplot_CB_classification.pdf")
 OUT_FIGURE_CELL_CLASS_FRAC <- file.path(OUT_DIR, "barplot_CB_classification_frac.pdf")
+OUT_FIGURE_CELL_CLASS_QUAL <- file.path(OUT_DIR, "barplot_CB_classification_highQual.pdf")
+OUT_FIGURE_CELL_CLASS_QUAL_FRAC <- file.path(OUT_DIR, "barplot_CB_classification_highQual_frac.pdf")
 OUT_FIGURE_CLONE_NUM       <- file.path(OUT_DIR, "barplot_GBC_count.pdf")
 
 # parse the input
@@ -94,19 +97,25 @@ n_samples <- nrow(results_dir_list)
 cat("collect CB classification results\n")
 
 # generate the barplot with the number of cells, grouped by class
-df_cell_bar <- as.data.frame(matrix(NA, nrow = 0, ncol = 3))
-colnames(df_cell_bar) <- c("sample", "class", "count")
+df_cell_bar <- df_cell_bar_qual <- as.data.frame(matrix(NA, nrow = 0, ncol = 3))
+colnames(df_cell_bar) <- colnames(df_cell_bar_qual) <- c("sample", "class", "count")
 for (i in 1:n_samples) {
     filename <- file.path(sample_dir[i], IN_CELL_INFO)
     df <- read.table(filename, sep = "\t")
+    df_qual <- df[df$quality.pass,]
     t <- table(df$class)
+    t_qual <- table(df_qual$class)
     df <- data.frame(sample = rep(sample_name[i], length(t)), t)
-    colnames(df) <- colnames(df_cell_bar)
+    df_qual <- data.frame(sample = rep(sample_name[i], length(t_qual)), t_qual)
+    colnames(df) <- colnames(df_qual) <- colnames(df_cell_bar)
     df_cell_bar <- rbind(df_cell_bar, df)
+    df_cell_bar_qual <- rbind(df_cell_bar_qual, df_qual)
 }
 df_cell_bar$class <- factor(df_cell_bar$class, levels = rev(c("single_guide", "coinfected", "doublet", "uninfected")))
+df_cell_bar_qual$class <- factor(df_cell_bar_qual$class, levels = rev(c("single_guide", "coinfected", "doublet", "uninfected")))
 
 write.table(df_cell_bar, file = OUT_TABLE_CELL_CLASS, sep = "\t", row.names = FALSE, quote = FALSE)
+write.table(df_cell_bar_qual, file = OUT_TABLE_CELL_CLASS_QUAL, sep = "\t", row.names = FALSE, quote = FALSE)
 
 g <- ggplot(data = df_cell_bar, aes(x = sample, y = count, fill = class)) + theme_classic() + geom_bar(stat = "identity") 
 g <- g + xlab("") + ylab("Number of CB") + ggtitle("CB classification")
@@ -116,9 +125,23 @@ g
 dev.off()
 
 g <- ggplot(data = df_cell_bar, aes(x = sample, y = count, fill = class)) + theme_classic() + geom_bar(stat = "identity", position = "fill") 
-g <- g + xlab("") + ylab("Number of CB") + ggtitle("CB classification")
+g <- g + xlab("") + ylab("CB fraction") + ggtitle("CB classification")
 g <- g + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 pdf(OUT_FIGURE_CELL_CLASS_FRAC, width = 4.5, height = 3)
+g
+dev.off()
+
+g <- ggplot(data = df_cell_bar_qual, aes(x = sample, y = count, fill = class)) + theme_classic() + geom_bar(stat = "identity") 
+g <- g + xlab("") + ylab("Number of CB") + ggtitle("CB classification")
+g <- g + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+pdf(OUT_FIGURE_CELL_CLASS_QUAL, width = 4.5, height = 3)
+g
+dev.off()
+
+g <- ggplot(data = df_cell_bar_qual, aes(x = sample, y = count, fill = class)) + theme_classic() + geom_bar(stat = "identity", position = "fill") 
+g <- g + xlab("") + ylab("CB fraction") + ggtitle("CB classification")
+g <- g + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+pdf(OUT_FIGURE_CELL_CLASS_QUAL_FRAC, width = 4.5, height = 3)
 g
 dev.off()
 
