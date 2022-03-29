@@ -173,7 +173,7 @@ for (s in subsets) {
     }
     ClusterGeneMarkersVsAll(object = object, 
                             out.dir = DEA_OUT_DIR, 
-                            id = CL_MODE, 
+                            id = COND_MODE, 
                             test.use = TEST, 
                             min.pct = MIN_PERC,
                             logFC = LOGFC,
