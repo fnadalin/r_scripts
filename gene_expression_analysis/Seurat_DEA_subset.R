@@ -171,7 +171,7 @@ for (s in subsets) {
                                   logFC = LOGFC,
                                   latent.vars = LATENT_VARS)
     }
-    ClusterGeneMarkersVsAll(object = object, 
+    ClusterGeneMarkersVsAll(object = obj_sub, 
                             out.dir = DEA_OUT_DIR, 
                             id = COND_MODE, 
                             test.use = TEST, 
