@@ -430,7 +430,7 @@ PlotPCAClusters <- function(object, out.file, dr = "pca", dim = 10, k = c(30), r
 
 # the logFC is defined as log(expr1+1) - log(expr2+1), where log is the natural logarithm
 # specify the assay explicitely in order to make sure that the integrated data will NOT be used for differential expression
-GeneMarkersTable <- function(object, out.name, ident.1, ident.2, test.use = "wilcox", min.pct = 0.1, logFC = 0.25) {
+GeneMarkersTable <- function(object, out.name, ident.1, ident.2, test.use = "wilcox", min.pct = 0.1, logFC = 0.25, latent.vars = NULL) {
 
     cells.1 <- WhichCells(object = object, idents = ident.1)
     exp1 <- apply(GetAssayData(object = object, assay = "RNA")[, cells.1, drop = F], 1, function(x) mean(x = expm1(x = x)))
@@ -438,7 +438,7 @@ GeneMarkersTable <- function(object, out.name, ident.1, ident.2, test.use = "wil
     cells.2 <- WhichCells(object = object, idents = ident.2)
     exp2 <- apply(GetAssayData(object = object, assay = "RNA")[, cells.2, drop = F], 1, function(x) mean(x = expm1(x = x)))
 
-    cluster_markers <- FindMarkers(object = object, assay = "RNA", ident.1 = ident.1, ident.2 = ident.2, min.pct = min.pct, logfc.threshold = logFC, test.use = test.use)
+    cluster_markers <- FindMarkers(object = object, assay = "RNA", ident.1 = ident.1, ident.2 = ident.2, min.pct = min.pct, logfc.threshold = logFC, test.use = test.use, latent.vars = latent.vars)
     df <- data.frame(geneID = rownames(cluster_markers),
                      pct.1 = cluster_markers$pct.1, pct.2 = cluster_markers$pct.2,
                      avg_exp.1 = exp1[rownames(cluster_markers)], avg_exp.2 = exp2[rownames(cluster_markers)],
@@ -479,7 +479,7 @@ GeneMarkersTableNEW <- function(object, out.name, ident.1, ident.2, test.use = "
 
 # NB: the row data are used automatically in FindMarkers() when a UMI counts-based method is selected!!!
 # NEW TABLE FORMAT
-ClusterGeneMarkersByPairs <- function(object, out.dir, id = "", clusters = NULL, test.use = "wilcox", min.pct = 0.1, logFC = 0.25) {
+ClusterGeneMarkersByPairs <- function(object, out.dir, id = "", clusters = NULL, test.use = "wilcox", min.pct = 0.1, logFC = 0.25, latent.vars = NULL) {
 
     if (id != "") Idents(object) <- id
     if (length(clusters) == 0) clusters <- levels(object@active.ident)
@@ -487,7 +487,7 @@ ClusterGeneMarkersByPairs <- function(object, out.dir, id = "", clusters = NULL,
     for (i in 1:(length(clusters)-1)) {    
         for (j in (i+1):length(clusters)) {
             deg.table <- paste(out.dir, "/DEG_", test.use, "_cl", clusters[i], "-", clusters[j], ".tsv", sep="")
-            GeneMarkersTable(object, out.name = deg.table, ident.1 = clusters[i], ident.2 = clusters[j], test.use = test.use, min.pct = min.pct, logFC = logFC)            
+            GeneMarkersTable(object, out.name = deg.table, ident.1 = clusters[i], ident.2 = clusters[j], test.use = test.use, min.pct = min.pct, logFC = logFC, latent.vars = latent.vars)            
         }
     }
 
@@ -497,14 +497,14 @@ ClusterGeneMarkersByPairs <- function(object, out.dir, id = "", clusters = NULL,
 
 # NB: the row data are used automatically in FindMarkers() when a UMI counts-based method is selected!!!
 # NEW TABLE FORMAT
-ClusterGeneMarkersVsAll <- function(object, out.dir, id = "", clusters = NULL, test.use = "wilcox", min.pct = 0.1, logFC = 0.25) {
+ClusterGeneMarkersVsAll <- function(object, out.dir, id = "", clusters = NULL, test.use = "wilcox", min.pct = 0.1, logFC = 0.25, latent.vars = NULL) {
 
     if (id != "") Idents(object) <- id
     if (length(clusters) == 0) clusters <- levels(object@active.ident)
 
     for (i in 1:length(clusters)) {
         deg.table <- paste(out.dir, "/DEG_", test.use, "_cl", clusters[i], "-all.tsv", sep="")
-        GeneMarkersTable(object, out.name = deg.table, ident.1 = clusters[i], ident.2 = setdiff(clusters, c(clusters[i])), test.use = test.use, min.pct = min.pct, logFC = logFC)    
+        GeneMarkersTable(object, out.name = deg.table, ident.1 = clusters[i], ident.2 = setdiff(clusters, c(clusters[i])), test.use = test.use, min.pct = min.pct, logFC = logFC, latent.vars = latent.vars)    
     }
 
     return()

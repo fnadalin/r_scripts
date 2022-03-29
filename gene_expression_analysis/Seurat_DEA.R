@@ -16,6 +16,8 @@ LOGFC <- 0.25
 LOGFC_FILT <- 0.5
 ADJ_PVAL_FILT <- 0.05
 
+LATENT_VARS <- NULL
+
 TOP_DEG <- 50
 GENES_EXCLUDE <- NULL
 
@@ -46,6 +48,8 @@ option_list <- list(
         help="minimum fraction of cells where the gene is detected in either one of the two sets [default=%default]"),
     make_option("--logFC", type = "double", default = LOGFC,
         help="minimum logFC between the two sets in order for a gene to be considered [default=%default]"),
+    make_option("--latent_vars", type = "character", default = LATENT_VARS,
+        help="comma-separated latent variables to be included in the model"),    
     make_option("--logFC_filt", type = "double", default = LOGFC_FILT,
         help="minimum logFC between the two sets in order for a gene to be selected among the filtered DEGs [default=%default]"),
     make_option("--adj_pval_filt", type = "double", default = ADJ_PVAL_FILT,
@@ -99,6 +103,9 @@ if (!is.null(opt$min_perc))
 if (!is.null(opt$logFC)) 
     LOGFC <- opt$logFC
 
+if (!is.null(opt$latent_vars))
+    LATENT_VARS <- unlist(strsplit(opt$latent_vars, split = ","))
+
 if (!is.null(opt$logFC_filt)) 
     LOGFC_FILT <- opt$logFC_filt
 
@@ -149,14 +156,16 @@ if (!NO_PAIRS) {
                               id = CL_MODE, 
                               test.use = TEST, 
                               min.pct = MIN_PERC, 
-                              logFC = LOGFC)
+                              logFC = LOGFC,
+                              latent.vars = LATENT_VARS)
 }
 ClusterGeneMarkersVsAll(object = object, 
                         out.dir = DEA_OUT_DIR, 
                         id = CL_MODE, 
                         test.use = TEST, 
                         min.pct = MIN_PERC,
-                        logFC = LOGFC)
+                        logFC = LOGFC,
+                        latent.vars = LATENT_VARS)
 
 sessionInfo()
 q()
