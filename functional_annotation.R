@@ -110,9 +110,9 @@ reactome_out <- paste0(OUT_PREFIX, "_REACTOME")
 kegg_out <- paste0(OUT_PREFIX, "_KEGG")
 msd_out <- paste0(OUT_PREFIX, "_MSIGDB")
 
-GOenrichNEW(table = SEL_GENES, out_prefix = go_out, org = ORG, title = TITLE, types = c("BP"))
-PWenrichNEW(table = SEL_GENES, out_prefix = reactome_out, db = "reactome", org = ORG, orgname = ORGNAME, title = TITLE)
-PWenrichNEW(table = SEL_GENES, out_prefix = kegg_out, db = "kegg", org = ORG, orgname = ORGNAME, title = TITLE)
+GOenrichNEW(table = SEL_GENES, out_prefix = go_out, org = ORG, title = TITLE, types = c("BP"), qval = QVAL)
+PWenrichNEW(table = SEL_GENES, out_prefix = reactome_out, db = "reactome", org = ORG, orgname = ORGNAME, title = TITLE, qval = QVAL)
+PWenrichNEW(table = SEL_GENES, out_prefix = kegg_out, db = "kegg", org = ORG, orgname = ORGNAME, title = TITLE, qval = QVAL)
 KEGGpostprocessingNEW(input.table = paste0(kegg_out, ".tsv"), output.table = paste0(kegg_out, "_conv.tsv"), org = ORG)
 MSDenrich(table = SEL_GENES, out_prefix = msd_out, org = ORG, species = SPECIES, title = TITLE, types = c("C6","C7"))
 for (t in c("C6","C7")) {
