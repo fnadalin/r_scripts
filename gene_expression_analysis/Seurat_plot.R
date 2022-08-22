@@ -18,6 +18,10 @@ DrPlot <- function(object, dr = "pca", dr_plot = "pca", pcs = 50, pval = 1e-05, 
 	pdf(file.path(out_dir, paste0(dr_type, "_plot_samples.pdf")), width = 3.7*2, height = 3*2)
 	print(DimPlot(object, group.by = "sample.name", reduction = dr_plot))
 	dev.off()
+	
+	pdf(file.path(out_dir, paste0(dr_type, "_plot_ccScore.pdf")), width = 3.7*2, height = 3*2)
+	print(DimPlot(object, group.by = "Phase", reduction = dr_plot))
+	dev.off()
 
 	for (kk in k) {
 		for (r in res) {
@@ -92,6 +96,7 @@ for (feature_method in c("mean.var.plot", "vst")) {
 			in_dir <- file.path(IN_DIR, case)
 			out_dir <- file.path(OUT_DIR, dr)
 			dir.create(out_dir, showWarnings = FALSE)
+			nPCs <- GetNPCs(in_dir)
 			if (!(tsne_dr %in% names(object@reductions)))
 				object <- RunTSNE(object, reduction = dr, dims = 1:nPCs, reduction.name = tsne_dr, reduction.key = tsne_dr)
 			if (!(umap_dr %in% names(object@reductions)))
