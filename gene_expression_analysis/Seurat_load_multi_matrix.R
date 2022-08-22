@@ -60,7 +60,7 @@ if (!is.null(opt$min_cells))
     MIN_CELLS <- as.numeric(opt$min_cells)
 
 if (!is.null(opt$vars_to_regress))
-    VARS_TO_REGRESS <- unlist(strsplit(opt$vars_to_regress, sep = ","))
+    VARS_TO_REGRESS <- unlist(strsplit(opt$vars_to_regress, split = ","))
 
 
 ################################## EXECUTION ###################################
@@ -141,7 +141,14 @@ rownames(meta) <- colnames(MM)
 
 object <- CreateSeuratObject(counts = MM, meta.data = meta, min.cells = MIN_CELLS, min.features = MIN_GENES)
 rm(MM)
+
 object <- NormalizeData(object)
+
+s.genes <- cc.genes$s.genes
+g2m.genes <- cc.genes$g2m.genes
+
+object <- CellCycleScoring(object, s.features = s.genes, g2m.features = g2m.genes, set.ident = TRUE)
+
 object <- ScaleData(object, vars.to.regress = VARS_TO_REGRESS)
 
 saveRDS(object, file = OUT_FILE)
