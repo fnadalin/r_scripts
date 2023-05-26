@@ -24,7 +24,7 @@ DrPlot <- function(object, dr = "pca", dr_plot = "pca", pcs = 50, pval = 1e-05, 
 	dev.off()
 	
 	pdf(file.path(out_dir, paste0(dr_type, "_plot_UMIcount.pdf")), width = 3.7*2, height = 3*2)
-	print(FeaturePlot(object, features = "nCount_RNA", reduction = dr_plot))
+	print(FeaturePlot(object, features = "nCount_RNA", reduction = dr_plot, cols = c("blue","red")))
 	dev.off()
 	
 	g <- ggplot(data = object@meta.data, aes(x = nCount_RNA)) + theme_classic() + geom_density() + ylab("density")
