@@ -114,8 +114,15 @@ if (!is.null(opt$top_deg))
 
 ############################### EXPORT FUNCTIONS ###############################
 
-PATH = "~/IIT/scripts/R"
-source(file.path(PATH, "functions.R"))
+library("funr")
+
+WORKING_DIR <- getwd()
+SCRIPT_PATH <- dirname(sys.script())
+SCRIPT_NAME <- basename(sys.script())
+setwd(SCRIPT_PATH)
+FUNCTIONS <- "functions.R"
+source(FUNCTIONS)
+setwd(WORKING_DIR)
 
 
 ######################### PRINT THE PARAMETERS TO FILE #########################
