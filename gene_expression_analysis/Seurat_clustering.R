@@ -82,6 +82,10 @@ dir.create(OUT_DIR, showWarnings = FALSE)
 
 object <- readRDS(OBJECT)
 
+# remove previous clustering solutions [FIXME: to test!]
+v <- colnames(object@meta.data)
+object@meta.data <- object@meta.data[,v[grep("clusters", v, invert = TRUE)]]
+
 for (feature_method in c("mean.var.plot", "vst")) {
 	if (feature_method == "mean.var.plot") {
 		for (ymin in disps) {
